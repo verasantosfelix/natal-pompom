@@ -367,11 +367,12 @@ footer{text-align:center;color:#8a7d5e;font-size:14px;padding:26px 0 90px}
         <div id="cupaobox" style="display:none;margin-top:8px"><input id="cupaoin" type="text" placeholder="Código" autocomplete="off" autocapitalize="characters" style="padding:10px;border:2px solid #e3d9b8;border-radius:10px;font-size:16px;width:150px;text-transform:uppercase"> <button type="button" class="btn" id="cupaook" style="padding:10px 16px;font-size:15px">Aplicar</button>
         <div id="cupaomsg" style="font-size:14px;font-weight:700;margin-top:6px"></div></div></div>
       <label class="chk" style="font-weight:600;font-size:14px;margin:14px 0 10px;text-align:left"><input type="checkbox" id="aceito"> Li e aceito os <a href="#termos">termos e condições</a>. Sei que é um produto digital personalizado, sem direito de livre resolução.</label>
-      <button class="btn green" id="buy">Quero o meu calendário</button>
+      <button class="btn green" id="buy">Quero o calendário digital</button>
+      <div style="font-size:14px;margin-top:6px;color:#6b5f46">Recebe os ficheiros (PDF) por email e imprime em casa.</div>
       <div style="margin-top:16px;padding-top:14px;border-top:2px dashed #e3d9b8">
         <div style="font-weight:800;color:var(--green)">Prefere receber em casa, já impresso?</div>
         <p style="font-size:14px;margin:6px 0 10px">Também enviamos o calendário já impresso, pelo correio. Fica por <b id="pimp">17,90 €</b> (<b>portes incluídos</b>), ou seja, o preço do seu calendário digital + 10 €. Este preço é para <b>Portugal continental</b>; para outros locais (ilhas ou estrangeiro) o valor tem de ser visto à parte, por mensagem. O prazo de entrega é confirmado por mensagem, antes de pagar. Compre o impresso e receba também os ficheiros digitais por email.</p>
-        <button class="btn" id="buyprint" style="background:#fff;border:2px solid var(--green);color:var(--green)">Pedir a versão impressa</button>
+        <button class="btn" id="buyprint" style="background:#fff;border:2px solid var(--green);color:var(--green)">Quero o calendário impresso, em casa</button>
       </div>
       <div id="msg"></div>
     </div>
@@ -543,7 +544,7 @@ const pedido = (impresso) => {
   const g = gente(), k = nExtras();
   const total = fmt(final(k, modo)) + (cupao ? " (com o código " + cupao.c + ", -" + Math.round(cupao.p*100) + "%)" : "");
   const versao = {historia:"História + desenhos", enigmas:"Enigmas + desenhos", completo:"Pacote completo (histórias + enigmas + desenhos)"}[modo];
-  const linhas = [impresso ? "Olá! Quero encomendar o calendário de advento O Natal do Duende Pompom em VERSÃO IMPRESSA, para receber em casa pelo correio." : "Olá! Quero encomendar o calendário de advento O Natal do Duende Pompom.", "",
+  const linhas = [impresso ? "Olá! Quero encomendar o calendário de advento O Natal do Duende Pompom em VERSÃO IMPRESSA, para receber em casa pelo correio." : "Olá! Quero encomendar o calendário de advento O Natal do Duende Pompom em VERSÃO DIGITAL (ficheiros PDF por email, para imprimir em casa).", "",
     "Versão: " + versao,
     "Criança: " + nome() + " (" + (genero === "m" ? "menino" : "menina") + ", " + idade + " anos)",
     "Duende que conta a história: " + ELFOS[elf1].nome + ((g.irm.length && elf2 !== elf1) ? " (e " + ELFOS[elf2].nome + " como segundo duende)" : "")];
