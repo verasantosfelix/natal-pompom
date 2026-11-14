@@ -462,10 +462,10 @@ function gente(){   // irmãos, amigos e animais escolhidos, com o máximo de 6 
 const animais = () => gente().pets;
 const nExtras = () => { const g = gente(); return g.irm.length + g.ami.length + g.pets.length; };
 const precoDe = (k, m) => (k === 0 ? 7.90 : k === 1 ? 9.90 : 11.90 + (k - 2)) + (m === "completo" ? 5 : 0);
-const CODIGOS = {"POMPOM20": 0.20};
+const CODIGOS = {"POMPOM20": {t: "pct", p: 0.20, txt: "-20%", aviso: "-20% no calendário"}, "POMPOM50": {t: "acima", p: 0.50, txt: "-50% acima dos 7,90 €", aviso: "-50% sobre o que passa dos 7,90 €"}};
 let cupao = null;
 const fmt = v => v.toFixed(2).replace(".", ",") + " €";
-const final = (k, m) => { const b = precoDe(k, m); return cupao ? Math.round(b * (1 - cupao.p) * 100) / 100 : b; };
+const final = (k, m) => { const b = precoDe(k, m); if (!cupao) return b; const v = cupao.t === "acima" ? (b > 7.90 ? 7.90 + (b - 7.90) * cupao.p : b) : b * (1 - cupao.p); return Math.round(v * 100) / 100; };
 const preco = k => fmt(final(k, modo));
 const juntar = l => { l = l.filter(Boolean); return l.length < 2 ? (l[0] || "") : l.slice(0,-1).join(", ") + " e " + l[l.length-1]; };
 
@@ -507,7 +507,7 @@ function render(){
   $("elfs").innerHTML = ELFSVG[elf1] + (gente().irm.length && elf2 !== elf1 ? ELFSVG[elf2] : "");
   [...$("tabs").children].forEach(b => b.classList.toggle("on", +b.dataset.d === dia));
   const k = nExtras();
-  $("tot").textContent = preco(k); $("pimp").textContent = fmt(final(k, modo) + 10); $("pv").innerHTML = preco(k).replace(" €", "<small> €</small>") + (cupao ? '<div style="font-size:15px;font-weight:700;color:var(--green);margin-top:6px">com o código ' + cupao.c + ' (-' + Math.round(cupao.p*100) + '%) · antes ' + fmt(precoDe(k, modo)) + '</div>' : "");
+  $("tot").textContent = preco(k); $("pimp").textContent = fmt(final(k, modo) + 10); $("pv").innerHTML = preco(k).replace(" €", "<small> €</small>") + (cupao ? '<div style="font-size:15px;font-weight:700;color:var(--green);margin-top:6px">com o código ' + cupao.c + ' (' + cupao.txt + ') · antes ' + fmt(precoDe(k, modo)) + '</div>' : "");
   [...$("modos").children].forEach(x => x.classList.toggle("on", x.dataset.m === modo));
   $("modo-nome").textContent = {historia: "História + desenhos", enigmas: "Enigmas + desenhos", completo: "Pacote completo (história + enigmas + desenhos)"}[modo];
   ["irm","ami","ani","an2"].forEach(id => $("ex-" + id).classList.toggle("open", $("c-" + id).checked));
@@ -542,7 +542,7 @@ const pedido = (impresso) => {
   const msg = $("msg"); msg.style.display = "block";
   if (!$("aceito").checked) { msg.textContent = "Para continuar, aceite os termos e condições."; msg.scrollIntoView({behavior: "smooth", block: "center"}); return; }
   const g = gente(), k = nExtras();
-  const total = fmt(final(k, modo)) + (cupao ? " (com o código " + cupao.c + ", -" + Math.round(cupao.p*100) + "%)" : "");
+  const total = fmt(final(k, modo)) + (cupao ? " (com o código " + cupao.c + ", " + cupao.txt + ")" : "");
   const versao = {historia:"História + desenhos", enigmas:"Enigmas + desenhos", completo:"Pacote completo (histórias + enigmas + desenhos)"}[modo];
   const linhas = [impresso ? "Olá! Quero encomendar o calendário de advento O Natal do Duende Pompom em VERSÃO IMPRESSA, para receber em casa pelo correio." : "Olá! Quero encomendar o calendário de advento O Natal do Duende Pompom em VERSÃO DIGITAL (ficheiros PDF por email, para imprimir em casa).", "",
     "Versão: " + versao,
@@ -551,7 +551,7 @@ const pedido = (impresso) => {
   if (g.irm.length) linhas.push("Irmãos: " + g.irm.join(", "));
   if (g.ami.length) linhas.push("Amigos: " + g.ami.join(", "));
   if (g.pets.length) linhas.push("Animais: " + g.pets.map(a => a.n + " (" + ({cao:"cão", gato:"gato"}[a.t] || "animal") + ")").join(", "));
-  if (impresso) linhas.push("", "Preço da versão impressa: " + fmt(final(k, modo) + 10) + (cupao ? " (calendário com o código " + cupao.c + ", -" + Math.round(cupao.p*100) + "%, + 10 € de impressão e portes incluídos)" : " (portes incluídos)"), "Peço que me indiquem o prazo de entrega. (Se a morada não for em Portugal continental, peço que me indiquem o preço dos portes.)", "Pagamento: MB WAY", "", "Nome para a entrega: ", "Morada completa (rua, código postal, localidade): ", "Telemóvel para o correio: ", "O meu email: ");
+  if (impresso) linhas.push("", "Preço da versão impressa: " + fmt(final(k, modo) + 10) + (cupao ? " (calendário com o código " + cupao.c + ", " + cupao.txt + ", + 10 € de impressão e portes incluídos)" : " (portes incluídos)"), "Peço que me indiquem o prazo de entrega. (Se a morada não for em Portugal continental, peço que me indiquem o preço dos portes.)", "Pagamento: MB WAY", "", "Nome para a entrega: ", "Morada completa (rua, código postal, localidade): ", "Telemóvel para o correio: ", "O meu email: ");
   else linhas.push("", "Total: " + total, "Pagamento: MB WAY", "", "O meu email para receber os ficheiros: ");
   linhas.push("", "Li e aceito os termos e condições.");
   const texto = linhas.join("\n");
@@ -574,7 +574,7 @@ const pedido = (impresso) => {
   try { window.open(url, "_blank"); } catch (e) {}
 };
 $("cupaolink").onclick = e => { e.preventDefault(); $("cupaobox").style.display = "block"; $("cupaoin").focus(); };
-const aplicarCupao = () => { const c = $("cupaoin").value.trim().toUpperCase(), m = $("cupaomsg"); if (CODIGOS[c]) { cupao = {c: c, p: CODIGOS[c]}; m.style.color = "var(--green)"; m.textContent = "Código aplicado: -" + Math.round(CODIGOS[c]*100) + "% no calendário."; } else { cupao = null; m.style.color = "var(--red)"; m.textContent = c ? "Código inválido." : ""; } render(); };
+const aplicarCupao = () => { const c = $("cupaoin").value.trim().toUpperCase(), m = $("cupaomsg"); if (CODIGOS[c]) { cupao = Object.assign({c: c}, CODIGOS[c]); m.style.color = "var(--green)"; m.textContent = "Código aplicado: " + CODIGOS[c].aviso + "."; } else { cupao = null; m.style.color = "var(--red)"; m.textContent = c ? "Código inválido." : ""; } render(); };
 $("cupaook").onclick = aplicarCupao; $("cupaoin").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); aplicarCupao(); } });
 $("buy").onclick = () => pedido(false);
 $("buyprint").onclick = () => pedido(true);
