@@ -545,7 +545,7 @@ const pedido = (impresso) => {
   const msg = $("msg"); msg.style.display = "block";
   if (!$("aceito").checked) { msg.textContent = "Para continuar, aceite os termos e condições."; msg.scrollIntoView({behavior: "smooth", block: "center"}); return; }
   const g = gente(), k = nExtras();
-  const total = fmt(final(k, modo)) + (cupao ? " (com o código " + cupao.c + ", " + cupao.txt + ")" : "");
+  const total = fmt(final(k, modo)) + (cupao ? " (com o código " + cupao.c + ", " + cupao.txt + (cupao.c === "CORES5" || cupao.c === "NATAL10" ? " · Cores e Fragrâncias" : "") + ")" : "");
   const versao = {historia:"História + desenhos", enigmas:"Enigmas + desenhos", completo:"Pacote completo (histórias + enigmas + desenhos)"}[modo];
   const linhas = [impresso ? "Olá! Quero encomendar o calendário de advento O Natal do Duende Pompom em VERSÃO IMPRESSA, para receber em casa pelo correio." : "Olá! Quero encomendar o calendário de advento O Natal do Duende Pompom em VERSÃO DIGITAL (ficheiros PDF por email, para imprimir em casa).", "",
     "Versão: " + versao,
