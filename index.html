@@ -464,7 +464,7 @@ function gente(){   // irmãos, amigos e animais escolhidos, com o máximo de 6 
 const animais = () => gente().pets;
 const nExtras = () => { const g = gente(); return g.irm.length + g.ami.length + g.pets.length; };
 const precoDe = (k, m) => (k === 0 ? 7.90 : k === 1 ? 9.90 : 11.90 + (k - 2)) + (m === "completo" ? 5 : 0);
-const CODIGOS = {"POMPOM20": {t: "pct", p: 0.20, txt: "-20%", aviso: "-20% no calendário"}, "POMPOM50": {t: "acima", p: 0.50, txt: "-50% acima dos 7,90 €", aviso: "-50% sobre o que passa dos 7,90 €"}};
+const CODIGOS = {"POMPOM20": {t: "pct", p: 0.20, txt: "-20%", aviso: "-20% no calendário"}, "POMPOM50": {t: "acima", p: 0.50, txt: "-50% acima dos 7,90 €", aviso: "-50% sobre o que passa dos 7,90 €"}, "CORES5": {t: "pct", p: 0.05, txt: "-5%", aviso: "-5% no calendário"}};
 let cupao = null;
 const fmt = v => v.toFixed(2).replace(".", ",") + " €";
 const final = (k, m) => { const b = precoDe(k, m); if (!cupao) return b; const v = cupao.t === "acima" ? (b > 7.90 ? 7.90 + (b - 7.90) * cupao.p : b) : b * (1 - cupao.p); return Math.round(v * 100) / 100; };
